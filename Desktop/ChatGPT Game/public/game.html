@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Draw & Guess 🎨</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="game-bg">
+
+  <!-- ── Overlay screens ───────────────────────────────────────────────── -->
+
+  <!-- Waiting / Lobby overlay -->
+  <div id="overlay-lobby" class="overlay">
+    <div class="overlay-card">
+      <h2>🎮 Waiting for players…</h2>
+      <p>Share this code with friends:</p>
+      <div class="room-code" id="display-code">——</div>
+      <p class="hint">Or send them the link and they can paste the code!</p>
+      <div id="lobby-players" class="player-pills"></div>
+      <div id="host-controls" class="hidden">
+        <p class="hint" id="start-hint">You need at least 2 players to start.</p>
+        <button id="btn-start" class="btn btn-primary btn-lg" disabled>Start Game</button>
+      </div>
+      <div id="guest-waiting" class="hidden">
+        <p class="hint">Waiting for the host to start…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pick word overlay (drawer only) -->
+  <div id="overlay-pick" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>✏️ Pick a word to draw!</h2>
+      <p>You have 15 seconds. Choose wisely!</p>
+      <div id="word-choices" class="word-choices"></div>
+    </div>
+  </div>
+
+  <!-- Round end overlay -->
+  <div id="overlay-roundend" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>⏱️ Round Over!</h2>
+      <p>The word was: <strong id="reveal-word">—</strong></p>
+      <div id="roundend-scores" class="score-list"></div>
+      <p class="hint">Next round starting soon…</p>
+    </div>
+  </div>
+
+  <!-- Game end overlay -->
+  <div id="overlay-gameend" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>🏆 Game Over!</h2>
+      <div id="gameend-scores" class="score-list"></div>
+      <button class="btn btn-primary" onclick="location.href='/'">Play Again</button>
+    </div>
+  </div>
+
+  <!-- ── Main game layout ───────────────────────────────────────────────── -->
+  <div id="game-ui" class="game-layout hidden">
+
+    <!-- Left: Scoreboard -->
+    <aside class="sidebar sidebar-left">
+      <div class="sidebar-header">
+        <span>👥 Players</span>
+        <span id="round-badge" class="round-badge">R1/3</span>
+      </div>
+      <div id="scoreboard" class="score-list"></div>
+    </aside>
+
+    <!-- Center: Canvas + toolbar -->
+    <main class="canvas-area">
+      <div class="canvas-header">
+        <div id="word-display" class="word-display">Waiting…</div>
+        <div id="timer-bar-wrap">
+          <div id="timer-bar" class="timer-bar"></div>
+          <span id="timer-text" class="timer-text">60</span>
+        </div>
+      </div>
+
+      <div class="canvas-wrap" id="canvas-wrap">
+        <canvas id="main-canvas"></canvas>
+        <!-- Drawing hint shown to non-drawers -->
+        <div id="viewer-hint" class="viewer-hint hidden">👀 Watch and guess!</div>
+      </div>
+
+      <!-- Toolbar (only visible to drawer) -->
+      <div id="draw-toolbar" class="draw-toolbar hidden">
+        <div class="color-swatches" id="color-swatches"></div>
+        <div class="tool-row">
+          <label>Size <input type="range" id="brush-size" min="2" max="40" value="8" /></label>
+          <button id="btn-eraser" class="btn btn-tool" title="Eraser">🧹</button>
+          <button id="btn-clear"  class="btn btn-tool btn-danger" title="Clear canvas">🗑️</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right: Chat -->
+    <aside class="sidebar sidebar-right">
+      <div class="sidebar-header">💬 Chat &amp; Guesses</div>
+      <div id="chat-log" class="chat-log"></div>
+      <div class="chat-input-row">
+        <input id="chat-input" type="text" placeholder="Type a guess…" maxlength="100" autocomplete="off" />
+        <button id="btn-send" class="btn btn-primary">➤</button>
+      </div>
+    </aside>
+
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
